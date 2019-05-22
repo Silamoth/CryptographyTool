@@ -13,6 +13,7 @@ public class CipherPanel extends JPanel
 {
 	protected JTextPane inputTextPane;
 	protected JLabel outputLabel;
+	protected JRadioButton encryptRadioButton, decryptRadioButton;
 	/**
 	 * Create the panel.
 	 */
@@ -31,12 +32,12 @@ public class CipherPanel extends JPanel
 		
 		ButtonGroup buttonGroup = new ButtonGroup();
 		
-		JRadioButton encryptRadioButton = new JRadioButton("Encrypt");
+		encryptRadioButton = new JRadioButton("Encrypt");
 		encryptRadioButton.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		encryptRadioButton.setBounds(10, 232, 109, 23);
 		add(encryptRadioButton);
 		
-		JRadioButton decryptRadioButton = new JRadioButton("Decrypt");
+		decryptRadioButton = new JRadioButton("Decrypt");
 		decryptRadioButton.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		decryptRadioButton.setBounds(10, 258, 109, 23);
 		add(decryptRadioButton);
