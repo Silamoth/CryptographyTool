@@ -4,20 +4,26 @@ import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
 import java.awt.BorderLayout;
 
-public class MainWindow {
+public class MainWindow 
+{
 
 	private JFrame frame;
 
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
+	public static void main(String[] args) 
+	{
+		EventQueue.invokeLater(new Runnable() 
+		{
+			public void run() 
+			{
+				try 
+				{
 					MainWindow window = new MainWindow();
 					window.frame.setVisible(true);
-				} catch (Exception e) {
+				} catch (Exception e) 
+				{
 					e.printStackTrace();
 				}
 			}
@@ -27,14 +33,16 @@ public class MainWindow {
 	/**
 	 * Create the application.
 	 */
-	public MainWindow() {
+	public MainWindow() 
+	{
 		initialize();
 	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize() {
+	private void initialize() 
+	{
 		frame = new JFrame();
 		frame.setBounds(100, 100, 800, 600);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -43,7 +51,7 @@ public class MainWindow {
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.setBounds(0, 0, 800, 600);
 		
-		CipherPanel caesarPanel = new CipherPanel();
+		CaesarPanel caesarPanel = new CaesarPanel();
 		tabbedPane.add(caesarPanel);
 		tabbedPane.setTitleAt(0, "Caesar Cipher");
 		

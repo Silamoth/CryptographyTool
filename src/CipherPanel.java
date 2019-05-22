@@ -6,13 +6,18 @@ import javax.swing.JRadioButton;
 import javax.swing.border.EtchedBorder;
 import javax.swing.JButton;
 import java.awt.Font;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
-public class CipherPanel extends JPanel {
-
+public class CipherPanel extends JPanel 
+{
+	protected JTextPane inputTextPane;
+	protected JLabel outputLabel;
 	/**
 	 * Create the panel.
 	 */
-	public CipherPanel() {
+	public CipherPanel() 
+	{
 		setLayout(null);
 		
 		JLabel lblNewLabel = new JLabel("Input:");
@@ -20,7 +25,7 @@ public class CipherPanel extends JPanel {
 		lblNewLabel.setBounds(10, 11, 89, 34);
 		add(lblNewLabel);
 		
-		JTextPane inputTextPane = new JTextPane();
+		inputTextPane = new JTextPane();
 		inputTextPane.setBounds(10, 44, 711, 169);
 		add(inputTextPane);
 		
@@ -44,15 +49,27 @@ public class CipherPanel extends JPanel {
 		lblOutput.setBounds(10, 305, 76, 35);
 		add(lblOutput);
 		
-		JLabel outputLabel = new JLabel("");
+		outputLabel = new JLabel("");
 		outputLabel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		outputLabel.setBounds(10, 351, 711, 169);
 		add(outputLabel);
 		
 		JButton goButton = new JButton("Go");
+		goButton.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent e) 
+			{
+				goButtonClicked();
+			}
+		});
 		goButton.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		goButton.setBounds(293, 232, 89, 23);
+		goButton.setBounds(639, 232, 89, 23);
 		add(goButton);
 
+	}
+	
+	protected void goButtonClicked()
+	{
+		
 	}
 }
