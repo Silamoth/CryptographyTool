@@ -43,29 +43,28 @@ public class CaesarPanel extends CipherPanel
 		
 		for (int i = 0; i < input.length; i++)
 		{
-			if (input[i] == ' ')
+			if ((int)input[i] < 65 || (int)input[i] > 97)		
+				output[i] = input[i];
+			else
 			{
-				output[i] = ' ';
-				i++;
-			}
-			
-			int adjustmentValue;
-			
-			if (Character.isUpperCase(input[i]))
-				adjustmentValue = 65;
-			else
-				adjustmentValue = 97;
-			
-			int asciiValue = (int)input[i];
-			
-			int newValue;
-			
-			if (encryptRadioButton.isSelected())
-				newValue = ((asciiValue - adjustmentValue + (int)shiftSpinner.getValue()) % 26) + adjustmentValue;
-			else
-				newValue = ((asciiValue - adjustmentValue - (int)shiftSpinner.getValue()) % 26) + adjustmentValue;
-			
-			output[i] = (char)newValue;
+				int adjustmentValue;
+				
+				if (Character.isUpperCase(input[i]))
+					adjustmentValue = 65;
+				else
+					adjustmentValue = 97;
+				
+				int asciiValue = (int)input[i];
+				
+				int newValue;
+				
+				if (encryptRadioButton.isSelected())
+					newValue = ((asciiValue - adjustmentValue + (int)shiftSpinner.getValue()) % 26) + adjustmentValue;
+				else
+					newValue = ((asciiValue - adjustmentValue - (int)shiftSpinner.getValue()) % 26) + adjustmentValue;
+				
+				output[i] = (char)newValue;
+			}		
 		}
 		
 		outputLabel.setText(new String(output));	

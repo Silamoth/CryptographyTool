@@ -4,6 +4,12 @@ import javax.swing.JOptionPane;
 
 import java.awt.Font;
 import javax.swing.JTextField;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
+import javax.swing.text.DocumentFilter;
+import javax.swing.text.DocumentFilter.FilterBypass;
+import javax.swing.text.PlainDocument;
 
 public class AffinePanel extends CipherPanel 
 {
@@ -33,6 +39,12 @@ public class AffinePanel extends CipherPanel
 		bTextField.setBounds(265, 281, 48, 20);
 		add(bTextField);
 		bTextField.setColumns(10);
+		
+		PlainDocument aDoc = (PlainDocument) aTextField.getDocument();
+	    aDoc.setDocumentFilter(new MyIntFilter());
+	    
+	    PlainDocument bDoc = (PlainDocument) bTextField.getDocument();
+	    bDoc.setDocumentFilter(new MyIntFilter());   
 	}
 	
 	public void goButtonClicked()
@@ -58,31 +70,110 @@ public class AffinePanel extends CipherPanel
 		
 		for (int i = 0; i < input.length; i++)
 		{
-			if (input[i] == ' ')
-			{
-				output[i] = ' ';
-				i++;
-			}
 			
-			int adjustmentValue;
-			
-			if (Character.isUpperCase(input[i]))
-				adjustmentValue = 65;
+			if (!Character.isJavaLetter(input[i]))
+				output[i] = input[i];
 			else
-				adjustmentValue = 97;
-			
-			int asciiValue = (int)input[i];
-			
-			int newValue;
-			
-			//if (encryptRadioButton.isSelected())
-				newValue = (((asciiValue - adjustmentValue) * a + b) % 26) + adjustmentValue;
-			//else
-				//newValue = ((asciiValue - adjustmentValue - a) % 26) + adjustmentValue;
-			
-			output[i] = (char)newValue;
+			{
+				int adjustmentValue;
+				
+				if (Character.isUpperCase(input[i]))
+					adjustmentValue = 65;
+				else
+					adjustmentValue = 97;
+				
+				int asciiValue = (int)input[i];
+				
+				int newValue;
+				
+				//if (encryptRadioButton.isSelected())
+					newValue = ((((asciiValue - adjustmentValue) * a) + b) % 26) + adjustmentValue;
+				//else
+					//newValue = ((asciiValue - adjustmentValue - a) % 26) + adjustmentValue;
+				
+				output[i] = (char)newValue;
+			}
 		}
 		
 		outputLabel.setText(new String(output));
 	}
 }
+
+//Taken from StackOverflow
+//https://stackoverflow.com/questions/11093326/restricting-jtextfield-input-to-integers
+
+class MyIntFilter extends DocumentFilter 
+{
+	   @Override
+	   public void insertString(FilterBypass fb, int offset, String string,
+	         AttributeSet attr) throws BadLocationException 
+	   {
+
+	      Document doc = fb.getDocument();
+	      StringBuilder sb = new StringBuilder();
+	      sb.append(doc.getText(0, doc.getLength()));
+	      sb.insert(offset, string);
+
+	      if (test(sb.toString())) 
+	      {
+	         super.insertString(fb, offset, string, attr);
+	      } else 
+	      {
+	         // warn the user and don't allow the insert
+	      }
+	   }
+
+	   private boolean test(String text) 
+	   {
+	      try 
+	      {
+	         Integer.parseInt(text);
+	         return true;
+	      } catch (NumberFormatException e) 
+	      {
+	    	  //Added in to allow for empty textfield
+	    	  if (text.isEmpty())
+	    		  return true;
+	    	  
+	         return false;
+	      }
+	   }
+
+	   @Override
+	   public void replace(FilterBypass fb, int offset, int length, String text,
+	         AttributeSet attrs) throws BadLocationException 
+	   {
+
+	      Document doc = fb.getDocument();
+	      StringBuilder sb = new StringBuilder();
+	      sb.append(doc.getText(0, doc.getLength()));
+	      sb.replace(offset, offset + length, text);
+
+	      if (test(sb.toString())) 
+	      {
+	         super.replace(fb, offset, length, text, attrs);
+	      } else {
+	         // warn the user and don't allow the insert
+	      }
+
+	   }
+
+	   @Override
+	   public void remove(FilterBypass fb, int offset, int length)
+	         throws BadLocationException 
+	   {
+	      Document doc = fb.getDocument();
+	      StringBuilder sb = new StringBuilder();
+	      sb.append(doc.getText(0, doc.getLength()));
+	      sb.delete(offset, offset + length);
+
+	      if (test(sb.toString())) 
+	      {
+	         super.remove(fb, offset, length);
+	      } else 
+	      {
+	         // warn the user and don't allow the insert
+	      }
+
+	   }
+	}
