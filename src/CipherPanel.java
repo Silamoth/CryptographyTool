@@ -14,9 +14,7 @@ public class CipherPanel extends JPanel
 	protected JTextPane inputTextPane;
 	protected JLabel outputLabel;
 	protected JRadioButton encryptRadioButton, decryptRadioButton;
-	/**
-	 * Create the panel.
-	 */
+	
 	public CipherPanel() 
 	{
 		setLayout(null);
@@ -33,6 +31,7 @@ public class CipherPanel extends JPanel
 		ButtonGroup buttonGroup = new ButtonGroup();
 		
 		encryptRadioButton = new JRadioButton("Encrypt");
+		encryptRadioButton.setSelected(true);
 		encryptRadioButton.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		encryptRadioButton.setBounds(10, 232, 109, 23);
 		add(encryptRadioButton);

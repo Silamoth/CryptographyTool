@@ -55,6 +55,9 @@ public class MainWindow
 		tabbedPane.add(caesarPanel);
 		tabbedPane.setTitleAt(0, "Caesar Cipher");
 		
+		AffinePanel affinePanel = new AffinePanel();
+		tabbedPane.add(affinePanel);
+		tabbedPane.setTitleAt(1, "Affine Cipher");
 		
 		frame.getContentPane().add(tabbedPane);
 	}

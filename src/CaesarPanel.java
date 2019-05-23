@@ -15,9 +15,6 @@ public class CaesarPanel extends CipherPanel
 {
 	JSpinner shiftSpinner;
 	
-	/**
-	 * Create the panel.
-	 */
 	public CaesarPanel() 
 	{
 		encryptRadioButton.setSelected(true);
@@ -46,6 +43,12 @@ public class CaesarPanel extends CipherPanel
 		
 		for (int i = 0; i < input.length; i++)
 		{
+			if (input[i] == ' ')
+			{
+				output[i] = ' ';
+				i++;
+			}
+			
 			int adjustmentValue;
 			
 			if (Character.isUpperCase(input[i]))
