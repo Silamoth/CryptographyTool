@@ -3,6 +3,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import java.awt.Font;
+import java.util.ArrayList;
+
 import javax.swing.JTextField;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
@@ -68,32 +70,76 @@ public class AffinePanel extends CipherPanel
 		int a = Integer.parseInt(aTextField.getText());
 		int b = Integer.parseInt(bTextField.getText());
 		
-		for (int i = 0; i < input.length; i++)
+		if (encryptRadioButton.isSelected())
 		{
-			
-			if (!Character.isJavaLetter(input[i]))
-				output[i] = input[i];
-			else
+			for (int i = 0; i < input.length; i++)
 			{
-				int adjustmentValue;
 				
-				if (Character.isUpperCase(input[i]))
-					adjustmentValue = 65;
+				if (!Character.isJavaLetter(input[i]))
+					output[i] = input[i];
 				else
-					adjustmentValue = 97;
-				
-				int asciiValue = (int)input[i];
-				
-				int newValue;
-				
-				//if (encryptRadioButton.isSelected())
-					newValue = ((((asciiValue - adjustmentValue) * a) + b) % 26) + adjustmentValue;
-				//else
-					//newValue = ((asciiValue - adjustmentValue - a) % 26) + adjustmentValue;
-				
-				output[i] = (char)newValue;
+				{
+					int adjustmentValue;
+					
+					if (Character.isUpperCase(input[i]))
+						adjustmentValue = 65;
+					else
+						adjustmentValue = 97;
+					
+					int asciiValue = (int)input[i];
+										
+					int newValue = ((((asciiValue - adjustmentValue) * a) + b) % 26) + adjustmentValue;
+					
+					output[i] = (char)newValue;
+				}
 			}
 		}
+		else
+		{
+			ArrayList<Integer> encryptedValues = new ArrayList<Integer>();	
+			
+			for (int x = 0; x < 26; x++)
+			{
+				encryptedValues.add((x * a + b) % 26);
+			}
+			
+			for (int i = 0; i < input.length; i++)
+			{
+				
+				if (!Character.isJavaLetter(input[i]))
+					output[i] = input[i];
+				else
+				{
+					int adjustmentValue;
+					
+					if (Character.isUpperCase(input[i]))
+						adjustmentValue = 65;
+					else
+						adjustmentValue = 97;
+					
+					int asciiValue = (int)input[i];
+					int adjustedValue = asciiValue - adjustmentValue;
+										
+					//Complicated stuff happens
+					
+					if (!encryptedValues.contains(adjustedValue))
+					{
+						JOptionPane.showMessageDialog(this.getParent(), "Encryption does not contain the letter '" + (char)(adjustedValue + adjustmentValue) + "'.", "Error", JOptionPane.ERROR_MESSAGE);
+						return;
+					}
+					
+					if (encryptedValues.indexOf(adjustedValue) != encryptedValues.lastIndexOf(adjustedValue))
+					{
+						JOptionPane.showMessageDialog(this.getParent(), "Encryption contains multiple instances of the letter '" + (char)(adjustedValue + adjustmentValue) + "'.", "Error", JOptionPane.ERROR_MESSAGE);
+						return;
+					}
+						
+					int newValue = encryptedValues.indexOf(adjustedValue);
+					
+					output[i] = (char)(newValue + adjustmentValue);
+				}
+			}
+		}	
 		
 		outputLabel.setText(new String(output));
 	}
