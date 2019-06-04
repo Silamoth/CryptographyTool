@@ -11,9 +11,9 @@ import java.awt.event.ActionEvent;
 
 public class CipherPanel extends JPanel 
 {
-	protected JTextPane inputTextPane;
-	protected JLabel outputLabel;
-	protected JRadioButton encryptRadioButton, decryptRadioButton;
+	private JTextPane inputTextPane;
+	private JLabel outputLabel;
+	private JRadioButton encryptRadioButton, decryptRadioButton;
 	
 	public CipherPanel() 
 	{
@@ -25,6 +25,7 @@ public class CipherPanel extends JPanel
 		add(lblNewLabel);
 		
 		inputTextPane = new JTextPane();
+		inputTextPane.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		inputTextPane.setBounds(10, 44, 711, 169);
 		add(inputTextPane);
 		
@@ -50,6 +51,7 @@ public class CipherPanel extends JPanel
 		add(lblOutput);
 		
 		outputLabel = new JLabel("");
+		outputLabel.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		outputLabel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		outputLabel.setBounds(10, 351, 711, 169);
 		add(outputLabel);
@@ -71,5 +73,25 @@ public class CipherPanel extends JPanel
 	protected void goButtonClicked()
 	{
 		
+	}
+	
+	protected String getInput()
+	{
+		return inputTextPane.getText();
+	}
+	
+	protected void setOutput(String output)
+	{
+		outputLabel.setText(output);
+	}
+	
+	protected boolean getEncryptStatus()
+	{
+		return encryptRadioButton.isSelected();
+	}
+	
+	protected boolean getDecryptStatus()
+	{
+		return decryptRadioButton.isSelected();
 	}
 }

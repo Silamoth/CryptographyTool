@@ -59,6 +59,10 @@ public class MainWindow
 		tabbedPane.add(affinePanel);
 		tabbedPane.setTitleAt(1, "Affine Cipher");
 		
+		HillPanel hillPanel = new HillPanel();
+		tabbedPane.add(hillPanel);
+		tabbedPane.setTitleAt(2, "Hill Cipher");
+		
 		frame.getContentPane().add(tabbedPane);
 	}
 

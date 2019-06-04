@@ -65,12 +65,12 @@ public class AffinePanel extends CipherPanel
 			return;
 		}
 		
-		char[] input = inputTextPane.getText().toCharArray();
+		char[] input = getInput().toCharArray();
 		char[] output = new char[input.length];
 		int a = Integer.parseInt(aTextField.getText());
 		int b = Integer.parseInt(bTextField.getText());
 		
-		if (encryptRadioButton.isSelected())
+		if (getEncryptStatus())
 		{
 			for (int i = 0; i < input.length; i++)
 			{
@@ -119,8 +119,6 @@ public class AffinePanel extends CipherPanel
 					
 					int asciiValue = (int)input[i];
 					int adjustedValue = asciiValue - adjustmentValue;
-										
-					//Complicated stuff happens
 					
 					if (!encryptedValues.contains(adjustedValue))
 					{
@@ -141,7 +139,7 @@ public class AffinePanel extends CipherPanel
 			}
 		}	
 		
-		outputLabel.setText(new String(output));
+		setOutput(new String(output));
 	}
 }
 

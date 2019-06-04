@@ -17,7 +17,6 @@ public class CaesarPanel extends CipherPanel
 	
 	public CaesarPanel() 
 	{
-		encryptRadioButton.setSelected(true);
 		this.setPreferredSize(super.getMaximumSize());
 		
 		shiftSpinner = new JSpinner();
@@ -38,12 +37,12 @@ public class CaesarPanel extends CipherPanel
 	{
 		super.goButtonClicked();
 		
-		char[] input = inputTextPane.getText().toCharArray();
+		char[] input = getInput().toCharArray();
 		char[] output = new char[input.length];
 		
 		for (int i = 0; i < input.length; i++)
 		{
-			if ((int)input[i] < 65 || (int)input[i] > 97)		
+			if (!Character.isJavaLetter(input[i]))
 				output[i] = input[i];
 			else
 			{
@@ -58,7 +57,7 @@ public class CaesarPanel extends CipherPanel
 				
 				int newValue;
 				
-				if (encryptRadioButton.isSelected())
+				if (getEncryptStatus())
 					newValue = ((asciiValue - adjustmentValue + (int)shiftSpinner.getValue()) % 26) + adjustmentValue;
 				else
 					newValue = ((asciiValue - adjustmentValue - (int)shiftSpinner.getValue()) % 26) + adjustmentValue;
@@ -67,7 +66,7 @@ public class CaesarPanel extends CipherPanel
 			}		
 		}
 		
-		outputLabel.setText(new String(output));	
+		setOutput(new String(output));	
 	}
 
 }
