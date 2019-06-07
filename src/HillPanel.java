@@ -4,6 +4,13 @@ import java.awt.Font;
 import java.util.ArrayList;
 
 import javax.swing.JTextField;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
+import javax.swing.text.DocumentFilter;
+import javax.swing.text.PlainDocument;
+import javax.swing.text.DocumentFilter.FilterBypass;
+
 
 public class HillPanel extends CipherPanel 
 {
@@ -23,6 +30,9 @@ public class HillPanel extends CipherPanel
 		keyTextBox.setBounds(285, 237, 96, 20);
 		add(keyTextBox);
 		keyTextBox.setColumns(10);	
+		
+		PlainDocument aDoc = (PlainDocument) keyTextBox.getDocument();
+	    aDoc.setDocumentFilter(new MyAlphabetFilter());
 		
 		//TODO: Add help box - possibly something you hover over - to explain things, especially the key for Hill
 	}
@@ -65,6 +75,24 @@ public class HillPanel extends CipherPanel
 		}
 		
 		String input = getInput().toLowerCase();
+		char[] inputArray = input.toCharArray();
+		ArrayList<NonAlphabetChar> specialChars = new ArrayList<NonAlphabetChar>();
+		StringBuilder sb = new StringBuilder(input);
+		
+		for (int i = 0; i < inputArray.length; i++)
+		{
+			int num = inputArray[i];
+			
+			if (num < 97 || num > 122)
+			{
+				NonAlphabetChar newChar = new NonAlphabetChar(i - specialChars.size() + 1, inputArray[i]);
+				specialChars.add(newChar);
+				sb.deleteCharAt(i - specialChars.size() + 1);
+				System.out.println(newChar.getValue());
+			}
+		}
+		
+		input = sb.toString();
 		int originalLength = input.length();
 		
 		//Pad input to be divisible by key
@@ -133,8 +161,16 @@ public class HillPanel extends CipherPanel
 			}
 		}
 		
-		setOutput(output.substring(0, originalLength));
-		//setOutput(output);
+		output = output.substring(0, originalLength);
+		sb = new StringBuilder(output);
+		
+		for (int i = specialChars.size() - 1; i >= 0; i--)
+		{
+			NonAlphabetChar temp = specialChars.get(i);
+			sb.insert(specialChars.get(i).getIndex() - 1, specialChars.get(i).getValue());
+		}
+		
+		setOutput(sb.toString());
 	}
 	
 	//Assume equally-sized square matrices
@@ -163,5 +199,106 @@ public class HillPanel extends CipherPanel
 		}
 		
 		return output;
+	}
+}
+
+class MyAlphabetFilter extends DocumentFilter 
+{
+	   @Override
+	   public void insertString(FilterBypass fb, int offset, String string,
+	         AttributeSet attr) throws BadLocationException 
+	   {
+
+	      Document doc = fb.getDocument();
+	      StringBuilder sb = new StringBuilder();
+	      sb.append(doc.getText(0, doc.getLength()));
+	      sb.insert(offset, string);
+
+	      if (test(sb.toString())) 
+	      {
+	         super.insertString(fb, offset, string, attr);
+	      } else 
+	      {
+	         // warn the user and don't allow the insert
+	      }
+	   }
+
+	   private boolean test(String text) 
+	   {
+		   //Allow empty string
+		   if (text.equals(""))
+			   return true;
+		   
+		   char[] input = text.toLowerCase().toCharArray();
+		   
+		   for (int i = 0; i < input.length; i++)
+		   {
+			   int num = input[i];
+			   
+			   if (num < 97 || num > 122)
+				   return false;
+		   }
+		   
+		   return true;
+	   }
+
+	   @Override
+	   public void replace(FilterBypass fb, int offset, int length, String text,
+	         AttributeSet attrs) throws BadLocationException 
+	   {
+
+	      Document doc = fb.getDocument();
+	      StringBuilder sb = new StringBuilder();
+	      sb.append(doc.getText(0, doc.getLength()));
+	      sb.replace(offset, offset + length, text);
+
+	      if (test(sb.toString())) 
+	      {
+	         super.replace(fb, offset, length, text, attrs);
+	      } else {
+	         // warn the user and don't allow the insert
+	      }
+
+	   }
+
+	   @Override
+	   public void remove(FilterBypass fb, int offset, int length)
+	         throws BadLocationException 
+	   {
+	      Document doc = fb.getDocument();
+	      StringBuilder sb = new StringBuilder();
+	      sb.append(doc.getText(0, doc.getLength()));
+	      sb.delete(offset, offset + length);
+
+	      if (test(sb.toString())) 
+	      {
+	         super.remove(fb, offset, length);
+	      } else 
+	      {
+	         // warn the user and don't allow the insert
+	      }
+
+	   }
+}
+
+class NonAlphabetChar
+{
+	private int index;
+	private char value;
+	
+	public NonAlphabetChar(int index, char value)
+	{
+		this.index = index;
+		this.value = value;
+	}
+	
+	public int getIndex()
+	{
+		return index;
+	}
+	
+	public char getValue()
+	{
+		return value;
 	}
 }
