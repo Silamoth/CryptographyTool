@@ -146,11 +146,41 @@ public class HillPanel extends CipherPanel
 		
 		String output = "";
 		
+		int[][] multipliedMatrix;
+		
+		if (getEncryptStatus())
+			multipliedMatrix = encryptionMatrix;
+		else
+		{
+			//Must create decryption matrix
+			
+			multipliedMatrix = new int[encryptionMatrix.length][encryptionMatrix.length];
+			
+			int determinant = calcDeterminant(encryptionMatrix);
+			
+			int inverse = 1;
+			
+			while ((determinant * inverse) % 26 != 1)
+			{
+				inverse++;
+			}
+			
+			int[][] adjugate = calcAdjugate(encryptionMatrix);
+			
+			for (int x = 0; x < multipliedMatrix.length; x++)
+			{
+				for (int y = 0; y < multipliedMatrix[x].length; y++)
+				{
+					multipliedMatrix[x][y] = (adjugate[x][y] * inverse) % 26;
+				}
+			}
+		}
+				
 		//Loop through each input matrix
 		for (int i = 0; i < inputMatrices.size(); i++)
 		{	
 			int[][] temp = inputMatrices.get(i);
-			char[][] result = multiplyMatrices(encryptionMatrix, inputMatrices.get(i));
+			char[][] result = multiplyMatrices(multipliedMatrix, inputMatrices.get(i));
 			
 			for (int x = 0; x < result.length; x++)
 			{
@@ -166,7 +196,7 @@ public class HillPanel extends CipherPanel
 		
 		for (int i = specialChars.size() - 1; i >= 0; i--)
 		{
-			NonAlphabetChar temp = specialChars.get(i);
+			//NonAlphabetChar temp = specialChars.get(i);
 			sb.insert(specialChars.get(i).getIndex() - 1, specialChars.get(i).getValue());
 		}
 		
@@ -199,6 +229,90 @@ public class HillPanel extends CipherPanel
 		}
 		
 		return output;
+	}
+	
+	int calcDeterminant(int[][] matrix)
+	{
+		//I'm going to "cross out" the first row
+		
+		int determinant = 0;
+		
+		if (matrix.length > 2)
+		{
+			ArrayList<int[][]> cofactors = calcCofactors(matrix);
+			
+			for (int i = 0; i < cofactors.size(); i++)
+			{
+				determinant += matrix[0][i] * calcDeterminant(cofactors.get(i)) * Math.pow(-1, i);
+			}
+		}
+		else if (matrix.length == 2)
+			determinant = matrix[0][0] * matrix[1][1] - matrix[1][0] * matrix[0][1];
+		else
+			return matrix[0][0];
+		
+		while (determinant < 0)
+			determinant += 26;
+		
+		return determinant % 26;
+	}
+	
+	int[][] calcAdjugate(int[][] matrix)
+	{
+		int[][] minors = new int[matrix.length][matrix[0].length];
+		
+		ArrayList<int[][]> cofactors = calcCofactors(matrix);
+		int index = 0;
+		
+		for (int x = 0; x < matrix.length; x++)
+		{
+			for (int y = 0; y < matrix[x].length; y++)
+			{
+				minors[x][y] = calcDeterminant(cofactors.get(index)) * (int)Math.pow(-1, index);
+				index++;
+				//TODO: Verify that order is correct here
+			}
+		}
+		
+		int[][] adjugate = new int[matrix.length][matrix[0].length];
+		
+		for (int x = 0; x < minors.length; x++)
+		{
+			for (int y = 0; y < minors[x].length; y++)
+			{
+				adjugate[y][x] = minors[x][y];
+			}
+		}
+		
+		return adjugate;
+	}
+	
+	ArrayList<int[][]> calcCofactors(int[][] matrix)
+	{
+		ArrayList<int[][]> cofactors = new ArrayList<int[][]>();
+		
+		for (int i = 0; i < matrix[0].length; i++)
+		{
+			//Must cross out this column to get cofactor
+			
+			int[][] cofactor = new int[matrix[0].length - 1][matrix[0].length - 1];
+			
+			for (int x = 1; x < matrix.length; x++)	//Start at 1 because crossing out first row
+			{
+				int skipCounter = 0;
+				for (int y = 0; y < matrix[x].length; y++)
+				{
+					if (y != i)
+						cofactor[x - 1][y - skipCounter] = matrix[x][y];
+					else
+						skipCounter++;
+				}
+			}
+			
+			cofactors.add(cofactor);
+		}
+		
+		return cofactors;
 	}
 }
 
