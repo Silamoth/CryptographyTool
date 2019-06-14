@@ -12,7 +12,7 @@ import java.awt.event.ActionEvent;
 public class CipherPanel extends JPanel 
 {
 	private JTextPane inputTextPane;
-	private JLabel outputLabel;
+	private JTextPane outputLabel;
 	private JRadioButton encryptRadioButton, decryptRadioButton;
 	
 	public CipherPanel() 
@@ -50,10 +50,13 @@ public class CipherPanel extends JPanel
 		lblOutput.setBounds(10, 305, 76, 35);
 		add(lblOutput);
 		
-		outputLabel = new JLabel("");
+		outputLabel = new JTextPane();
+		outputLabel.setEditable(false);
 		outputLabel.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		outputLabel.setBackground(null);
 		outputLabel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		outputLabel.setBounds(10, 351, 711, 169);
+		
 		add(outputLabel);
 		
 		JButton goButton = new JButton("Go");
