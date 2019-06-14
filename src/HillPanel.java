@@ -172,6 +172,11 @@ public class HillPanel extends CipherPanel
 				for (int y = 0; y < multipliedMatrix[x].length; y++)
 				{
 					multipliedMatrix[x][y] = (adjugate[x][y] * inverse) % 26;
+					
+					while (multipliedMatrix[x][y] < 0)
+					{
+						multipliedMatrix[x][y] += 26;
+					}
 				}
 			}
 		}
@@ -266,21 +271,24 @@ public class HillPanel extends CipherPanel
 		
 		for (int x = 0; x < matrix.length; x++)
 		{
+			int base = (int)Math.pow(-1, x);
+			//When base is 1, the minor element can never be negative
 			for (int y = 0; y < matrix[x].length; y++)
 			{
-				minors[x][y] = calcDeterminant(cofactors.get(index)) * (int)Math.pow(-1, index);
+				int num = cofactors.get(index)[0][0];
+				System.out.println(num);
+				minors[x][y] = calcDeterminant(cofactors.get(index)) * (int)Math.pow(-1, y) * base;
 				index++;
-				//TODO: Verify that order is correct here
 			}
 		}
 		
 		int[][] adjugate = new int[matrix.length][matrix[0].length];
 		
-		for (int x = 0; x < minors.length; x++)
+		for (int x = 0; x < minors[0].length; x++)
 		{
-			for (int y = 0; y < minors[x].length; y++)
+			for (int y = 0; y < minors.length; y++)
 			{
-				adjugate[y][x] = minors[x][y];
+				adjugate[x][y] = minors[x][y];
 			}
 		}
 		
@@ -291,25 +299,38 @@ public class HillPanel extends CipherPanel
 	{
 		ArrayList<int[][]> cofactors = new ArrayList<int[][]>();
 		
-		for (int i = 0; i < matrix[0].length; i++)
+		for (int i = 0; i < matrix.length; i++)
 		{
-			//Must cross out this column to get cofactor
+			//i represents row to get crossed out
 			
-			int[][] cofactor = new int[matrix[0].length - 1][matrix[0].length - 1];
-			
-			for (int x = 1; x < matrix.length; x++)	//Start at 1 because crossing out first row
+			for (int j = 0; j < matrix[i].length; j++)
 			{
-				int skipCounter = 0;
-				for (int y = 0; y < matrix[x].length; y++)
+				//j represents column to get crossed out
+				
+				int[][] cofactor = new int[matrix[0].length - 1][matrix[0].length - 1];
+				
+				int xSkip = 0;
+				for (int x = 0; x < matrix.length; x++)
 				{
-					if (y != i)
-						cofactor[x - 1][y - skipCounter] = matrix[x][y];
-					else
-						skipCounter++;
+					int ySkip = 0;
+					for (int y = 0; y < matrix[x].length; y++)
+					{
+						if (x == i)
+							xSkip = 1;
+						else
+						{
+							if (y == j)
+								ySkip = 1;
+							else
+							{
+								cofactor[y - ySkip][x - xSkip] = matrix[y][x];
+							}
+						}
+					}
 				}
+				
+				cofactors.add(cofactor);
 			}
-			
-			cofactors.add(cofactor);
 		}
 		
 		return cofactors;
