@@ -62,9 +62,25 @@ public class VigenerePanel extends CipherPanel
 				int newValue;
 								
 				if (getEncryptStatus())
-					newValue = ((asciiValue - adjustmentValue + (int)shiftLetter - 97) % 26) + adjustmentValue;
+				{
+					newValue = (asciiValue - adjustmentValue + (int)shiftLetter - 97);
+					
+					while (newValue < 0)
+						newValue += 26;
+					
+					newValue %= 26;
+					newValue += adjustmentValue;
+				}
 				else
-					newValue = ((asciiValue - adjustmentValue - (int)shiftLetter - 97) % 26) + adjustmentValue;
+				{
+					newValue = (asciiValue - adjustmentValue - (int)shiftLetter + 97);
+
+					while (newValue < 0)
+						newValue += 26;
+					
+					newValue %= 26;
+					newValue += adjustmentValue;
+				}
 				
 				output[i] = (char)newValue;
 			}
