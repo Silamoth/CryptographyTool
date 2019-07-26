@@ -63,6 +63,10 @@ public class MainWindow
 		tabbedPane.add(hillPanel);
 		tabbedPane.setTitleAt(2, "Hill Cipher");
 		
+		VigenerePanel vigenerePanel = new VigenerePanel();
+		tabbedPane.add(vigenerePanel);
+		tabbedPane.setTitleAt(3, "Vigenere Cipher");
+		
 		frame.getContentPane().add(tabbedPane);
 	}
 
