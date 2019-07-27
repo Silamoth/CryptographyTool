@@ -67,6 +67,10 @@ public class MainWindow
 		tabbedPane.add(vigenerePanel);
 		tabbedPane.setTitleAt(3, "Vigenere Cipher");
 		
+		Base64Panel base64Panel = new Base64Panel();
+		tabbedPane.add(base64Panel);
+		tabbedPane.setTitleAt(4, "Base64");
+		
 		frame.getContentPane().add(tabbedPane);
 	}
 
