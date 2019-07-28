@@ -94,7 +94,61 @@ public class Base64Panel extends CipherPanel
 		}
 		else
 		{
+			String binaryString = "";
 			
+			for (int i = 0; i < input.length; i++)
+			{
+				int num = 0;
+				
+				if (input[i] != '=')
+				{
+					//Get indexing of current base64 character
+					for (int x = 0; x < encoding.length; x++)
+					{
+						if (encoding[x] == input[i])
+							num = x;
+					}
+					
+					//Get 6 bit binary representation of number				
+					for (int pow = 5; pow >= 0; pow--)
+					{
+						int digit = (int)Math.pow(2, pow);
+						
+						if (num - digit >= 0)
+						{
+							num -= digit;
+							binaryString += "1";
+						}
+						else
+							binaryString += "0";
+					}
+				}
+			}
+						
+			//Remove padded 0's
+			while (binaryString.length() % 8 != 0)
+				binaryString = binaryString.substring(0, binaryString.length() - 1);
+			
+			//Split into 8 bit groupings
+			
+			String output = "";
+			
+			for (int i = 0; i < binaryString.length(); i += 8)
+			{
+				String group = binaryString.substring(i, i + 8);
+				
+				int value = 0;
+				
+				for (int x = group.length() - 1; x >= 0; x--)
+				{
+					if (group.substring(x, x + 1).equals("1"))
+						value += (int)Math.pow(2, group.length() - x - 1);
+				}
+				
+				output += (char)value;
+			}
+			
+			setOutput(output);
 		}
 	}
 }
