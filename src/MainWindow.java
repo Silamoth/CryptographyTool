@@ -71,6 +71,10 @@ public class MainWindow
 		tabbedPane.add(base64Panel);
 		tabbedPane.setTitleAt(4, "Base64");
 		
+		PortaPanel portaPanel = new PortaPanel();
+		tabbedPane.add(portaPanel);
+		tabbedPane.setTitleAt(5, "Porta Cipher");
+		
 		frame.getContentPane().add(tabbedPane);
 	}
 
