@@ -27,7 +27,9 @@ public class PortaPanel extends CipherPanel
 		keyTextBox.setColumns(10);	
 		
 		PlainDocument aDoc = (PlainDocument) keyTextBox.getDocument();
-	    aDoc.setDocumentFilter(new MyAlphabetFilter());		
+	    aDoc.setDocumentFilter(new MyAlphabetFilter());	
+	    
+	    hideDecryptButton();
 	}
 	
 	public void goButtonClicked()

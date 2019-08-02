@@ -34,7 +34,7 @@ public class CipherPanel extends JPanel
 		encryptRadioButton = new JRadioButton("Encrypt");
 		encryptRadioButton.setSelected(true);
 		encryptRadioButton.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		encryptRadioButton.setBounds(10, 232, 109, 23);
+		encryptRadioButton.setBounds(10, 232, 165, 23);
 		add(encryptRadioButton);
 		
 		decryptRadioButton = new JRadioButton("Decrypt");
@@ -96,5 +96,11 @@ public class CipherPanel extends JPanel
 	protected boolean getDecryptStatus()
 	{
 		return decryptRadioButton.isSelected();
+	}
+	
+	protected void hideDecryptButton()
+	{
+		decryptRadioButton.hide();
+		encryptRadioButton.setText("Encrypt/Decrypt");
 	}
 }
