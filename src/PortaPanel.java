@@ -40,15 +40,47 @@ public class PortaPanel extends CipherPanel
 		char[] output = new char[input.length];
 		int keyIndex = 0;
 		
-		int[] adjustedKey = new int[keyString.length()];
+		String[] alphabets = new String[13];
 		char[] key = keyString.toCharArray();
 		
-		for (int i = 0; i < key.length; i++)
+		//Generate base string to work off of 
+		
+		String baseString = "";
+		for (int x = 110; x <= 122; x++)
 		{
-			int adjustedValue = 13 + ((int)key[i] - 97) / 2;
-			
-			adjustedKey[i] = adjustedValue;
+			baseString += (char)x;
 		}
+		for (int x = 97; x < 110; x++)
+		{
+			baseString += (char)x;
+		}
+		
+		//Generate alphabets
+		for (int i = 0; i < 13; i++)
+		{
+			String beginning = baseString.substring(0, i);	
+			String ending = baseString.substring(26 - i);
+			
+			String alphabet = baseString.replace(beginning, "");
+			alphabet = alphabet.replace(ending, "");
+			
+			String firstHalf = alphabet.substring(0, 13 - i);
+			String secondHalf = alphabet.substring(13 - i);
+			
+			alphabet = firstHalf + beginning + ending + secondHalf;
+			
+			alphabets[i] = alphabet;
+		}
+		
+		//Generate correlations for key letters to alphabets
+		char[] firstHalf = new char[13];
+		char[] secondHalf = new char[13];
+		
+		for (int i = 0; i < 13; i++)
+			firstHalf[i] = (char)(97 + 2 * i);
+		
+		for (int i = 0; i < 13; i++)
+			secondHalf[i] = (char)(98 + 2 * i);
 		
 		for (int i = 0; i < input.length; i++)
 		{			
@@ -60,24 +92,38 @@ public class PortaPanel extends CipherPanel
 			else
 			{
 				int adjustmentValue;
-				
 				if (Character.isUpperCase(input[i]))
 					adjustmentValue = 65;
 				else
 					adjustmentValue = 97;
-				
 				int asciiValue = (int)input[i];
+								
+				//Find which 'half' this letter of the key is in
+				int index = -1;
 				
-				int newValue;
-								
-				newValue = (asciiValue - adjustmentValue + adjustedKey[keyIndex % adjustedKey.length]);
-								
-				while (newValue >= 26)
-					newValue -= 13;
+				for (int x = 0; x < firstHalf.length; x++)
+				{
+					if (firstHalf[x] == key[keyIndex % key.length])
+					{
+						index = x;
+						break;
+					}
+				}
+				if (index == -1)	//Still hasn't been found
+				{
+					for (int x = 0; x < secondHalf.length; x++)
+					{
+						if (secondHalf[x] == key[keyIndex % key.length])
+						{
+							index = x;
+							break;
+						}
+					}
+				}
 				
-				newValue += adjustmentValue;
-								
-				output[i] = (char)newValue;
+				String alphabet = alphabets[index];
+				char newValue = alphabet.charAt((int)input[i] - 97);
+				output[i] = newValue;
 			}
 			
 			keyIndex++;
