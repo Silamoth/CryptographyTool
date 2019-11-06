@@ -62,6 +62,9 @@ public class CaesarPanel extends CipherPanel
 				else
 					newValue = ((asciiValue - adjustmentValue - (int)shiftSpinner.getValue()) % 26) + adjustmentValue;
 				
+				while (newValue < 97)
+					newValue += 26;
+				
 				output[i] = (char)newValue;
 			}
 		}
